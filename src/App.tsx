@@ -3,6 +3,10 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Shop from './pages/Shop'
 import ProductDetail from './pages/ProductDetail'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Cart from './pages/Cart'
+
 
 function App() {
   return (
@@ -12,11 +16,11 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
       <Route path="/product/:id" element={<ProductDetail />} />
-      <Route path="/cart" element={<div>Cart Page</div>} />
+      <Route path="/cart" element={<Cart />} />
       <Route path="/about" element={<div>About Page</div>} />
       <Route path="/contact" element={<div>Contact Page</div>} />
-      <Route path="/login" element={<div>Login Page</div>} />
-      <Route path="/register" element={<div>Register Page</div>} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/admin" element={<div>Admin Panel</div>} />
     </Routes>
     </>

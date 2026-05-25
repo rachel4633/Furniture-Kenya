@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import { ShoppingBag, Info, Phone, ShoppingCart, LogIn } from 'lucide-react'
+import { useCart} from '../context/CartContext'
 
 function Navbar() {
+  const { totalItems } = useCart()
+
   return (
     <nav style={{
       backgroundColor: 'var(--bg-secondary)',
@@ -67,8 +70,28 @@ function Navbar() {
           display: 'flex',
           alignItems: 'center',
           gap: '0.4rem',
+          position: 'relative'
         }}>
           <ShoppingCart size={18} /> Cart
+          {totalItems > 0 && (
+            <span style={{
+              position: 'absolute',
+              top: '-8px',
+              right: '-12px',
+              backgroundColor: 'var(--gold-primary)',
+              color: 'var(--bg-primary)',
+              borderRadius: '50%',
+              width: '18px',
+              height: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.7rem',
+              fontWeight: 'bold'
+            }}>
+              {totalItems}
+            </span>
+          )}
         </Link>
 
         <Link to="/login" style={{

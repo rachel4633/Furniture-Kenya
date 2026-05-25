@@ -1,5 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
-import { ShoppingCart, Heart, ArrowLeft, Star, Truck, Shield } from 'lucide-react'
+import { ShoppingCart, Heart, ArrowLeft, Truck, Shield } from 'lucide-react'
+import{ useCart} from '../context/CartContext'
+
 
 const products = [
   {
@@ -109,6 +111,8 @@ const products = [
 ]
 
 function ProductDetail() {
+const { addToCart } = useCart()
+
   const { id } = useParams()
   const product = products.find(p => p.id === Number(id))
 
@@ -263,22 +267,30 @@ function ProductDetail() {
             </div>
 
             {/* Buttons */}
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-              <button style={{
-                flex: 1,
-                backgroundColor: 'var(--gold-primary)',
-                color: 'var(--bg-primary)',
-                padding: '1rem',
-                border: 'none',
-                borderRadius: '4px',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-              }}>
+            <button
+                onClick={() => addToCart({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: product.image,
+                  category: product.category,
+                })}
+                style={{
+                  flex: 1,
+                  backgroundColor: 'var(--gold-primary)',
+                  color: 'var(--bg-primary)',
+                  padding: '1rem',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                }}
+              >
                 <ShoppingCart size={18} /> Add to Cart
               </button>
               <button style={{
@@ -311,7 +323,7 @@ function ProductDetail() {
           </div>
         </div>
       </div>
-    </div>
+  
   )
 }
 
