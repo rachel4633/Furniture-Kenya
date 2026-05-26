@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { ShoppingBag, Info, Phone, ShoppingCart, LogIn } from 'lucide-react'
 import { useCart} from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 
 function Navbar() {
   const { totalItems } = useCart()
+  const { user, isAdmin, logout } = useAuth()
 
   return (
     <nav style={{
@@ -94,19 +96,49 @@ function Navbar() {
           )}
         </Link>
 
-        <Link to="/login" style={{
-          color: 'var(--bg-primary)',
-          backgroundColor: 'var(--gold-primary)',
-          padding: '0.5rem 1.2rem',
-          borderRadius: '4px',
-          textDecoration: 'none',
-          fontWeight: 'bold',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.4rem',
-        }}>
-          <LogIn size={16} /> Login
-        </Link>
+          {user ? (
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                {isAdmin && (
+                  <Link to="/admin" style={{
+                    color: 'var(--gold-primary)',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: 'bold',
+                  }}>
+                    ⚙️ Admin
+                  </Link>
+                )}
+                <button
+                  onClick={logout}
+                  style={{
+                    color: 'var(--bg-primary)',
+                    backgroundColor: 'var(--gold-primary)',
+                    padding: '0.5rem 1.2rem',
+                    borderRadius: '4px',
+                    border: 'none',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" style={{
+                color: 'var(--bg-primary)',
+                backgroundColor: 'var(--gold-primary)',
+                padding: '0.5rem 1.2rem',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}>
+                <LogIn size={16} /> Login
+              </Link>
+            )}
       </div>
     </nav>
   )
