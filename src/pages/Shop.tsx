@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ShoppingCart, Heart } from 'lucide-react'
 import { getProducts } from '../services/api'
 import type { Product } from '../types'
+import { useWishlist } from '../context/WishlistContext'
 
 const categories = ['All', 'Living Room', 'Bedroom', 'Dining', 'Office', 'Outdoor']
 
@@ -12,6 +13,7 @@ function Shop() {
   const [error, setError] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
   const [search, setSearch] = useState('')
+  const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist()
 
   useEffect(() => {
     fetchProducts()
@@ -156,14 +158,13 @@ function Shop() {
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--gold-primary)')}
               onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
             >
-              {/* Image */}
-              <div style={{ position: 'relative' }}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  style={{ width: '100%', height: '220px', objectFit: 'cover' }}
-                />
-                <button style={{
+            {/* Heart */}
+            <button
+                onClick={() => isWishlisted(product.id)
+                  ? removeFromWishlist(product.id)
+                  : addToWishlist(product)
+                }
+                style={{
                   position: 'absolute',
                   top: '1rem',
                   right: '1rem',
@@ -176,11 +177,14 @@ function Shop() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  color: 'var(--gold-primary)',
-                }}>
-                  <Heart size={16} />
-                </button>
-              </div>
+                  color: isWishlisted(product.id) ? '#e74c3c' : 'var(--gold-primary)',
+                }}
+              >
+                <Heart
+                  size={16}
+                  fill={isWishlisted(product.id) ? '#e74c3c' : 'none'}
+                />
+              </button>
 
               {/* Info */}
               <div style={{ padding: '1.2rem' }}>

@@ -9,6 +9,7 @@ import Cart from './pages/Cart'
 import Admin from './pages/Admin'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import Wishlist from './pages/Wishlist'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/wishlist" element={<Wishlist />} />
     </Routes>
     </>
   )

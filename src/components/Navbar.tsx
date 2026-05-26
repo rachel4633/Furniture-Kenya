@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
-import { ShoppingBag, Info, Phone, ShoppingCart, LogIn } from 'lucide-react'
+import { ShoppingBag, Info, Phone, ShoppingCart, LogIn, Heart } from 'lucide-react'
 import { useCart} from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
+import { useWishlist } from '../context/WishlistContext'
 
 function Navbar() {
   const { totalItems } = useCart()
   const { user, isAdmin, logout } = useAuth()
+  const { totalWishlist } = useWishlist()
 
   return (
     <nav style={{
@@ -95,6 +97,37 @@ function Navbar() {
             </span>
           )}
         </Link>
+
+          <Link to="/wishlist" style={{
+              color: 'var(--text-secondary)',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              position: 'relative',
+            }}>
+              <Heart size={18} />
+              Saved
+              {totalWishlist > 0 && (
+                <span style={{
+                  backgroundColor: '#e74c3c',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  width: '18px',
+                  height: '18px',
+                  fontSize: '0.7rem',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  top: '-8px',
+                  right: '-14px',
+                }}>
+                  {totalWishlist}
+                </span>
+              )}
+            </Link>
 
           {user ? (
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
