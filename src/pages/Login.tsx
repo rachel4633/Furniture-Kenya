@@ -2,8 +2,10 @@ import axios from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { LogIn, Mail, Lock } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const Login = () => {
+  const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState('')
@@ -28,7 +30,7 @@ const Login = () => {
       setLoading('')
 
       if (response.data.user) {
-        localStorage.setItem('user', JSON.stringify(response.data.user))
+        login(response.data.user)
         setSuccess('Login successful. Welcome back! 🎉')
         setTimeout(() => navigate('/'), 2000)
       } else {

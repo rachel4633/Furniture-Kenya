@@ -1,79 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ShoppingCart, Heart } from 'lucide-react'
-
-const products = [
-  {
-    id: 1,
-    name: 'Luxury Sofa Set',
-    price: 85000,
-    category: 'Living Room',
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80',
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: 'King Bed Frame',
-    price: 65000,
-    category: 'Bedroom',
-    image: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=80',
-    rating: 4,
-  },
-  {
-    id: 3,
-    name: 'Dining Table Set',
-    price: 72000,
-    category: 'Dining',
-    image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80',
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: 'Executive Desk',
-    price: 45000,
-    category: 'Office',
-    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&q=80',
-    rating: 4,
-  },
-  {
-    id: 5,
-    name: 'Outdoor Lounge Set',
-    price: 55000,
-    category: 'Outdoor',
-    image: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=600&q=80',
-    rating: 4,
-  },
-  {
-    id: 6,
-    name: 'Modern Wardrobe',
-    price: 58000,
-    category: 'Bedroom',
-    image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&q=80',
-    rating: 5,
-  },
-  {
-    id: 7,
-    name: 'Coffee Table',
-    price: 18000,
-    category: 'Living Room',
-    image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80',
-    rating: 4,
-  },
-  {
-    id: 8,
-    name: 'Bookshelf Unit',
-    price: 22000,
-    category: 'Office',
-    image: 'https://images.unsplash.com/photo-1594620302200-9a762244a156?w=600&q=80',
-    rating: 4,
-  },
-]
+import { getProducts } from '../services/api'
+import type { Product } from '../types'
 
 const categories = ['All', 'Living Room', 'Bedroom', 'Dining', 'Office', 'Outdoor']
 
 function Shop() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
   const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true)
+      const response = await getProducts()
+      setProducts(response.data)
+      setLoading(false)
+    } catch (err) {
+      setError('Failed to load products. Please try again.')
+      setLoading(false)
+    }
+  }
 
   const filtered = products.filter(p => {
     const matchCategory = activeCategory === 'All' || p.category === activeCategory
@@ -148,110 +102,143 @@ function Shop() {
         ))}
       </div>
 
-      {/* Product Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '2rem',
-        maxWidth: '1200px',
-        margin: '0 auto',
-      }}>
-        {filtered.map(product => (
-          <div
-            key={product.id}
+      {/* Loading */}
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '4rem' }}>
+          <p style={{ color: 'var(--gold-primary)', fontSize: '1.1rem' }}>
+            Loading products...
+          </p>
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <div style={{ textAlign: 'center', padding: '4rem' }}>
+          <p style={{ color: 'var(--error)', fontSize: '1.1rem', marginBottom: '1rem' }}>
+            {error}
+          </p>
+          <button
+            onClick={fetchProducts}
             style={{
-              backgroundColor: 'var(--bg-secondary)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              transition: 'border-color 0.3s',
+              backgroundColor: 'var(--gold-primary)',
+              color: 'var(--bg-primary)',
+              padding: '0.8rem 2rem',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
             }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--gold-primary)')}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
           >
-            {/* Image */}
-            <div style={{ position: 'relative' }}>
-              <img
-                src={product.image}
-                alt={product.name}
-                style={{ width: '100%', height: '220px', objectFit: 'cover' }}
-              />
-              {/* Wishlist */}
-              <button style={{
-                position: 'absolute',
-                top: '1rem',
-                right: '1rem',
-                backgroundColor: 'rgba(0,0,0,0.6)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '36px',
-                height: '36px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: 'var(--gold-primary)',
-              }}>
-                <Heart size={16} />
-              </button>
-            </div>
+            Try Again
+          </button>
+        </div>
+      )}
 
-            {/* Info */}
-            <div style={{ padding: '1.2rem' }}>
-              <p style={{
-                color: 'var(--gold-primary)',
-                fontSize: '0.75rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                marginBottom: '0.3rem',
-              }}>
-                {product.category}
-              </p>
-              <h3 style={{
-                color: 'var(--text-primary)',
-                fontFamily: 'Georgia, serif',
-                fontSize: '1.1rem',
-                marginBottom: '0.5rem',
-              }}>
-                {product.name}
-              </h3>
-
-              {/* Stars */}
-              <div style={{ marginBottom: '1rem' }}>
-                {'★'.repeat(product.rating)}{'☆'.repeat(5 - product.rating)}
-              </div>
-
-              {/* Price + Button */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <p style={{
-                  color: 'var(--gold-primary)',
-                  fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                }}>
-                  KES {product.price.toLocaleString()}
-                </p>
-                <Link to={`/product/${product.id}`} style={{
-                  backgroundColor: 'var(--gold-primary)',
-                  color: 'var(--bg-primary)',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '4px',
-                  textDecoration: 'none',
-                  fontWeight: 'bold',
-                  fontSize: '0.85rem',
+      {/* Product Grid */}
+      {!loading && !error && (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '2rem',
+          maxWidth: '1200px',
+          margin: '0 auto',
+        }}>
+          {filtered.map(product => (
+            <div
+              key={product.id}
+              style={{
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                transition: 'border-color 0.3s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--gold-primary)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+            >
+              {/* Image */}
+              <div style={{ position: 'relative' }}>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  style={{ width: '100%', height: '220px', objectFit: 'cover' }}
+                />
+                <button style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  backgroundColor: 'rgba(0,0,0,0.6)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.4rem',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: 'var(--gold-primary)',
                 }}>
-                  <ShoppingCart size={14} /> View
-                </Link>
+                  <Heart size={16} />
+                </button>
+              </div>
+
+              {/* Info */}
+              <div style={{ padding: '1.2rem' }}>
+                <p style={{
+                  color: 'var(--gold-primary)',
+                  fontSize: '0.75rem',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  marginBottom: '0.3rem',
+                }}>
+                  {product.category}
+                </p>
+                <h3 style={{
+                  color: 'var(--text-primary)',
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '1.1rem',
+                  marginBottom: '0.5rem',
+                }}>
+                  {product.name}
+                </h3>
+
+                {/* Stars */}
+                <div style={{ marginBottom: '1rem', color: 'var(--gold-primary)' }}>
+                  {'★'.repeat(product.rating ?? 4)}{'☆'.repeat(5 - (product.rating ?? 4))}
+                </div>
+
+                {/* Price + Button */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <p style={{
+                    color: 'var(--gold-primary)',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                  }}>
+                    KES {Number(product.price).toLocaleString()}
+                  </p>
+                  <Link to={`/product/${product.id}`} style={{
+                    backgroundColor: 'var(--gold-primary)',
+                    color: 'var(--bg-primary)',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '4px',
+                    textDecoration: 'none',
+                    fontWeight: 'bold',
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                  }}>
+                    <ShoppingCart size={14} /> View
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* No results */}
-      {filtered.length === 0 && (
+      {!loading && !error && filtered.length === 0 && (
         <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '4rem' }}>
           <p style={{ fontSize: '1.2rem' }}>No products found 😔</p>
           <p>Try a different search or category</p>
