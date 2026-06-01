@@ -37,7 +37,7 @@ function About() {
           margin: '0 auto',
           lineHeight: 1.8,
         }}>
-          Furnish KE was born from a simple belief — every Kenyan home deserves
+          Young Digital Furniture was born from a simple belief — every Kenyan home deserves
           beautiful, quality furniture without compromise.
         </p>
       </section>
@@ -68,7 +68,7 @@ function About() {
             }}>
               We are a Nairobi-based premium furniture company dedicated to
               transforming Kenyan living spaces. From modern apartments in
-              Westlands to family homes in Karen, we have furnished thousands
+              City to family homes in Rural areas, we have furnished thousands
               of homes across the country.
             </p>
             <p style={{
@@ -135,7 +135,7 @@ function About() {
             { icon: <Star size={32} />, title: 'Quality First', desc: 'We never compromise on the quality of materials or craftsmanship.' },
             { icon: <Users size={32} />, title: 'Customer Focused', desc: 'Your satisfaction is our top priority, from browsing to delivery.' },
             { icon: <Truck size={32} />, title: 'Kenya Wide', desc: 'We deliver to all 47 counties with care and reliability.' },
-            { icon: <Shield size={32} />, title: 'Trusted Brand', desc: 'Over 8 years of building trust with Kenyan families.' },
+            { icon: <Shield size={32} />, title: 'Trusted Brand', desc: 'Over  years of building trust with Kenyan families.' },
           ].map(value => (
             <div key={value.title} style={{
               backgroundColor: 'var(--bg-secondary)',
@@ -162,9 +162,9 @@ function About() {
         fontSize: '0.85rem',
       }}>
         <p style={{ color: 'var(--gold-primary)', fontFamily: 'Georgia, serif', fontSize: '1.2rem', marginBottom: '0.5rem' }}>
-          FURNISH KE
+          YOUNG DIGITAL FURNITURE
         </p>
-        <p>© 2026 Furnish KE. All rights reserved. | Nairobi, Kenya</p>
+        <p>© 2026 Young Digital Furniture. All rights reserved. | Nairobi, Kenya</p>
       </footer>
 
     </div>

@@ -27,8 +27,7 @@ const Register = () => {
       formdata.append('password', password)
       formdata.append('phone', phone)
 
-      const response = await axios.post('https://godchild.alwaysdata.net/api/signup', formdata)
-
+      const response = await axios.post('https://furnish-ke-api.onrender.com/api/signup', formdata)
       setLoading('')
       setSuccess(response.data.message || 'Account created successfully! 🎉')
 
@@ -90,7 +89,7 @@ const Register = () => {
             fontSize: '1.8rem',
             marginBottom: '0.5rem',
           }}>
-            FURNISH KE
+         YOUNG DIGITAL FURNITURE
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             Create your account to get started.

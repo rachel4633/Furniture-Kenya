@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { ShoppingCart, Heart } from 'lucide-react'
+import { ShoppingCart, Heart, Eye } from 'lucide-react' // CHANGED: Added 'Eye' icon
+import { useNavigate } from 'react-router-dom'           // CHANGED: NEW - for navigation
 import { getProducts } from '../services/api'
 import type { Product } from '../types'
+import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 
 const categories = ['All', 'Living Room', 'Bedroom', 'Dining', 'Office', 'Outdoor']
@@ -14,6 +15,8 @@ function Shop() {
   const [activeCategory, setActiveCategory] = useState('All')
   const [search, setSearch] = useState('')
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist()
+  const { addToCart } = useCart()
+  const navigate = useNavigate()  // CHANGED: NEW - added for routing
 
   useEffect(() => {
     fetchProducts()
@@ -153,41 +156,92 @@ function Shop() {
                 border: '1px solid var(--border)',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                transition: 'border-color 0.3s',
+                // CHANGED: Added animation and flex
+                transition: 'border-color 0.3s, transform 0.3s',
+                display: 'flex',
+                flexDirection: 'column',
               }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--gold-primary)')}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+              // CHANGED: NEW - Card lift animation on hover
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'var(--gold-primary)'
+                e.currentTarget.style.transform = 'translateY(-4px)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'var(--border)'
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
             >
-            {/* Heart */}
-            <button
-                onClick={() => isWishlisted(product.id)
-                  ? removeFromWishlist(product.id)
-                  : addToWishlist(product)
-                }
-                style={{
-                  position: 'absolute',
-                  top: '1rem',
-                  right: '1rem',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '36px',
-                  height: '36px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: isWishlisted(product.id) ? '#e74c3c' : 'var(--gold-primary)',
-                }}
-              >
-                <Heart
-                  size={16}
-                  fill={isWishlisted(product.id) ? '#e74c3c' : 'none'}
+              {/* ========== CHANGED: NEW IMAGE CONTAINER SECTION ========== */}
+              <div style={{ position: 'relative',
+                  overflow: 'hidden',
+                  backgroundColor: 'var(--bg-tertiary)',
+                  height: '250px',
+                  display:'flex',
+                  alignItems:'center',
+                  justifyContent:'center'
+                  }}>
+                {/* NEW: Display product image */}
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    transition: 'transform 0.3s',
+                  }}
+                  // NEW: Image zoom on hover
+                  onMouseEnter={e => {
+                    (e.target as HTMLImageElement).style.transform = 'scale(1.05)'
+                  }}
+                  onMouseLeave={e => {
+                    (e.target as HTMLImageElement).style.transform = 'scale(1)'
+                  }}
                 />
-              </button>
 
-              {/* Info */}
-              <div style={{ padding: '1.2rem' }}>
+                {/* Heart Button - moved inside image container */}
+                <button
+                  onClick={() => isWishlisted(product.id)
+                    ? removeFromWishlist(product.id)
+                    : addToWishlist(product)
+                  }
+                  style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    backgroundColor: 'rgba(0,0,0,0.6)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: isWishlisted(product.id) ? '#e74c3c' : 'var(--gold-primary)',
+                    // CHANGED: Added transitions
+                    transition: 'all 0.2s',
+                  }}
+                  // CHANGED: NEW - Heart button animations
+                  onMouseEnter={e => {
+                    e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.8)'
+                    e.currentTarget.style.transform = 'scale(1.1)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.6)'
+                    e.currentTarget.style.transform = 'scale(1)'
+                  }}
+                >
+                  <Heart
+                    size={16}
+                    fill={isWishlisted(product.id) ? '#e74c3c' : 'none'}
+                  />
+                </button>
+              </div>
+              {/* ========== END IMAGE CONTAINER ========== */}
+
+              {/* Info Section */}
+              <div style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <p style={{
                   color: 'var(--gold-primary)',
                   fontSize: '0.75rem',
@@ -202,39 +256,98 @@ function Shop() {
                   fontFamily: 'Georgia, serif',
                   fontSize: '1.1rem',
                   marginBottom: '0.5rem',
+                  lineHeight: 1.3,
                 }}>
                   {product.name}
                 </h3>
 
                 {/* Stars */}
-                <div style={{ marginBottom: '1rem', color: 'var(--gold-primary)' }}>
+                <div style={{ marginBottom: '1rem', color: 'var(--gold-primary)', fontSize: '0.9rem' }}>
                   {'★'.repeat(product.rating ?? 4)}{'☆'.repeat(5 - (product.rating ?? 4))}
                 </div>
 
-                {/* Price + Button */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <p style={{
-                    color: 'var(--gold-primary)',
-                    fontWeight: 'bold',
-                    fontSize: '1.1rem',
-                  }}>
-                    KES {Number(product.price).toLocaleString()}
-                  </p>
-                  <Link to={`/product/${product.id}`} style={{
-                    backgroundColor: 'var(--gold-primary)',
-                    color: 'var(--bg-primary)',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '4px',
-                    textDecoration: 'none',
-                    fontWeight: 'bold',
-                    fontSize: '0.85rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                  }}>
-                    <ShoppingCart size={14} /> View
-                  </Link>
+                {/* Price */}
+                <p style={{
+                  color: 'var(--gold-primary)',
+                  fontWeight: 'bold',
+                  fontSize: '1.1rem',
+                  marginBottom: '1rem',
+                  marginTop: 'auto',
+                }}>
+                  KES {Number(product.price).toLocaleString()}
+                </p>
+
+                {/* ========== CHANGED: TWO BUTTONS INSTEAD OF ONE ========== */}
+                <div style={{ display: 'flex', gap: '0.8rem' }}>
+                  {/* NEW: View Button - links to ProductDetail page */}
+                  <button
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: 'transparent',
+                      color: 'var(--gold-primary)',
+                      border: '1px solid var(--gold-primary)',
+                      padding: '0.6rem 0.8rem',
+                      borderRadius: '4px',
+                      fontWeight: 'bold',
+                      fontSize: '0.8rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                    }}
+                    // NEW: View button hover effect
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = 'var(--gold-primary)'
+                      e.currentTarget.style.color = 'var(--bg-primary)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = 'transparent'
+                      e.currentTarget.style.color = 'var(--gold-primary)'
+                    }}
+                  >
+                    <Eye size={14} /> View
+                  </button>
+
+                  {/* CHANGED: Add to Cart button - now separate */}
+                  <button
+                    onClick={() => addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      image: product.image,
+                      category: product.category,
+                    })}
+                    style={{
+                      flex: 1,
+                      backgroundColor: 'var(--gold-primary)',
+                      color: 'var(--bg-primary)',
+                      padding: '0.6rem 0.8rem',
+                      borderRadius: '4px',
+                      border: 'none',
+                      fontWeight: 'bold',
+                      fontSize: '0.8rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                    }}
+                    // CHANGED: NEW - Add button hover animation
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'translateY(-2px)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    <ShoppingCart size={14} /> Add
+                  </button>
                 </div>
+                {/* ========== END BUTTON CHANGES ========== */}
               </div>
             </div>
           ))}

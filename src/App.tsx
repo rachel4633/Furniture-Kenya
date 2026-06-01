@@ -10,6 +10,7 @@ import Admin from './pages/Admin'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Wishlist from './pages/Wishlist'
+import Checkout from './pages/Checkout'
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/checkout" element={<Checkout />} />
     </Routes>
     </>
   )

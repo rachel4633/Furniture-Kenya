@@ -29,7 +29,7 @@ function Navbar() {
           fontFamily: 'Georgia, serif',
           letterSpacing: '0.1em',
         }}>
-          FURNISH <span style={{ color: 'var(--text-primary)' }}>KE</span>
+          YOUNG DIGITAL <span style={{ color: 'var(--text-primary)' }}>FURNITURE</span>
         </h1>
       </Link>
 

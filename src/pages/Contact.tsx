@@ -139,7 +139,7 @@ function Contact() {
 
             {/* WhatsApp Button */}
             
-              <a href="https://wa.me/254700000000?text=Hi! I have a question about Furnish KE"
+              <a href="https://wa.me/254700000000?text=Hi! I have a question about YOUNG DIGITAL FURNITURE"
               target="_blank"
               rel="noreferrer"
               style={{
@@ -277,9 +277,9 @@ function Contact() {
         fontSize: '0.85rem',
       }}>
         <p style={{ color: 'var(--gold-primary)', fontFamily: 'Georgia, serif', fontSize: '1.2rem', marginBottom: '0.5rem' }}>
-          FURNISH KE
+          YOUNG DIGITAL FURNITURE
         </p>
-        <p>© 2026 Furnish KE. All rights reserved. | Nairobi, Kenya</p>
+        <p>© 2026 Young Digital Furniture. All rights reserved. | Nairobi, Kenya</p>
       </footer>
 
     </div>

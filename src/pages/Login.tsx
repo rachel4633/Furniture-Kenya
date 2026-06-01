@@ -1,18 +1,39 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { LogIn, Mail, Lock } from 'lucide-react'
+import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const Login = () => {
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState('')
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
 
   const navigate = useNavigate()
+
+  const inputStyle = {
+    width: '100%',
+    padding: '0.9rem 1rem 0.9rem 2.8rem',
+    backgroundColor: 'var(--bg-tertiary)',
+    border: '1px solid var(--border)',
+    borderRadius: '4px',
+    color: 'var(--text-primary)',
+    fontSize: '0.95rem',
+    outline: 'none',
+    boxSizing: 'border-box' as const,
+  }
+
+  const iconStyle = {
+    position: 'absolute' as const,
+    left: '1rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: 'var(--text-muted)',
+  }
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
@@ -25,7 +46,7 @@ const Login = () => {
       data.append('email', email)
       data.append('password', password)
 
-      const response = await axios.post('https://godchild.alwaysdata.net/api/signin', data)
+      const response = await axios.post('https://furnish-ke-api.onrender.com/api/signin', data)
 
       setLoading('')
 
@@ -124,60 +145,44 @@ const Login = () => {
 
           {/* Email */}
           <div style={{ position: 'relative' }}>
-            <Mail size={16} style={{
-              position: 'absolute',
-              left: '1rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--text-muted)',
-            }} />
+            <Mail size={16} style={iconStyle} />
             <input
               type="email"
               placeholder="Email address"
               required
               value={email}
               onChange={e => setEmail(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.9rem 1rem 0.9rem 2.8rem',
-                backgroundColor: 'var(--bg-tertiary)',
-                border: '1px solid var(--border)',
-                borderRadius: '4px',
-                color: 'var(--text-primary)',
-                fontSize: '0.95rem',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
+              style={inputStyle}
             />
           </div>
 
           {/* Password */}
           <div style={{ position: 'relative' }}>
-            <Lock size={16} style={{
-              position: 'absolute',
-              left: '1rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--text-muted)',
-            }} />
+            <Lock size={16} style={iconStyle} />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               required
               value={password}
               onChange={e => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.9rem 1rem 0.9rem 2.8rem',
-                backgroundColor: 'var(--bg-tertiary)',
-                border: '1px solid var(--border)',
-                borderRadius: '4px',
-                color: 'var(--text-primary)',
-                fontSize: '0.95rem',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
+              style={{ ...inputStyle, paddingRight: '3rem' }}
             />
+            <button
+              onClick={() => setShowPassword(!showPassword)}
+              type="button"
+              style={{
+                position: 'absolute',
+                right: '1rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+              }}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
 
           {/* Submit */}

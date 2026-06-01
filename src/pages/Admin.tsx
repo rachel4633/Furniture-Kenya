@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, Trash2, Pencil, X, Package } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { getProducts, addProduct, deleteProduct } from '../services/api'
+import { getProducts, addProduct, deleteProduct, updateProduct } from '../services/api'
 import type { Product } from '../types'
 
 function Admin() {
@@ -12,6 +12,7 @@ function Admin() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -48,13 +49,46 @@ function Admin() {
     }
   }
 
+  // Reset form fields
+  const resetForm = () => {
+    setName('')
+    setPrice('')
+    setCategory('')
+    setDescription('')
+    setImage('')
+    setMaterial('')
+    setDimensions('')
+    setEditingProduct(null)
+  }
+
+  // Handle clicking Edit button
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product)
+    setName(product.name)
+    setPrice(String(product.price))
+    setCategory(product.category)
+    setDescription(product.description || '')
+    setImage(product.image)
+    setMaterial(product.material || '')
+    setDimensions(product.dimensions || '')
+    setShowForm(true)
+    setError('')
+  }
+
+  // Handle Add New Product
   const handleAddProduct = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     setError('')
     setSuccess('')
 
+    if (!name || !price || !category || !image) {
+      setError('Please fill in all required fields')
+      return
+    }
+
     try {
       const formData = new FormData()
+      formData.append('user_id', String(user?.id))
       formData.append('name', name)
       formData.append('price', price)
       formData.append('category', category)
@@ -66,21 +100,64 @@ function Admin() {
       await addProduct(formData)
       setSuccess('Product added successfully! ✅')
       setShowForm(false)
-
-      // Reset form
-      setName('')
-      setPrice('')
-      setCategory('')
-      setDescription('')
-      setImage('')
-      setMaterial('')
-      setDimensions('')
-
+      resetForm()
       fetchProducts()
-
       setTimeout(() => setSuccess(''), 3000)
     } catch {
       setError('Failed to add product. Try again.')
+    }
+  }
+
+  // Handle Update Existing Product
+  const handleUpdateProduct = async (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    if (!editingProduct) return
+
+    setError('')
+    setSuccess('')
+
+    if (!name || !price || !category || !image) {
+      setError('Please fill in all required fields')
+      return
+    }
+
+    try {
+      // Create FormData just like addProduct
+      const formData = new FormData()
+      formData.append('user_id', String(user?.id))
+      formData.append('name', name)
+      formData.append('price', price)
+      formData.append('category', category)
+      formData.append('description', description)
+      formData.append('image', image)
+      formData.append('material', material)
+      formData.append('dimensions', dimensions)
+
+      // Call updateProduct from your api.ts
+      await updateProduct(editingProduct.id, formData)
+
+      // Update local state to show changes immediately
+      const updatedProduct = {
+        ...editingProduct,
+        name,
+        price: Number(price),
+        category,
+        description,
+        image,
+        material,
+        dimensions,
+      }
+
+      setProducts(prev =>
+        prev.map(p => p.id === editingProduct.id ? updatedProduct : p)
+      )
+
+      setSuccess(`"${name}" updated successfully! ✅`)
+      setShowForm(false)
+      resetForm()
+      setTimeout(() => setSuccess(''), 3000)
+    } catch {
+      setError('Failed to update product. Try again.')
     }
   }
 
@@ -88,7 +165,7 @@ function Admin() {
     if (!confirm(`Are you sure you want to delete "${productName}"?`)) return
 
     try {
-      await deleteProduct(id)
+      await deleteProduct(id, Number(user!.id))
       setSuccess(`"${productName}" deleted successfully.`)
       fetchProducts()
       setTimeout(() => setSuccess(''), 3000)
@@ -135,7 +212,10 @@ function Admin() {
           </div>
 
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              resetForm()
+              setShowForm(!showForm)
+            }}
             style={{
               backgroundColor: 'var(--gold-primary)',
               color: 'var(--bg-primary)',
@@ -182,7 +262,7 @@ function Admin() {
           </p>
         )}
 
-        {/* Add Product Form */}
+        {/* Add/Edit Product Form */}
         {showForm && (
           <div style={{
             backgroundColor: 'var(--bg-secondary)',
@@ -197,7 +277,7 @@ function Admin() {
               marginBottom: '1.5rem',
               fontSize: '1.5rem',
             }}>
-              Add New Product
+              {editingProduct ? `Edit "${editingProduct.name}"` : 'Add New Product'}
             </h2>
 
             <div style={{
@@ -309,25 +389,50 @@ function Admin() {
               </div>
             </div>
 
-            <button
-              onClick={handleAddProduct}
-              style={{
-                marginTop: '1.5rem',
-                backgroundColor: 'var(--gold-primary)',
-                color: 'var(--bg-primary)',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '0.9rem 2rem',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-              }}
-            >
-              <Plus size={18} /> Add Product
-            </button>
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+              <button
+                onClick={editingProduct ? handleUpdateProduct : handleAddProduct}
+                style={{
+                  backgroundColor: 'var(--gold-primary)',
+                  color: 'var(--bg-primary)',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '0.9rem 2rem',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+              >
+                {editingProduct ? (
+                  <><Pencil size={18} /> Update Product</>
+                ) : (
+                  <><Plus size={18} /> Add Product</>
+                )}
+              </button>
+              {editingProduct && (
+                <button
+                  onClick={() => {
+                    resetForm()
+                    setShowForm(false)
+                  }}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: 'var(--gold-primary)',
+                    border: '1px solid var(--gold-primary)',
+                    borderRadius: '4px',
+                    padding: '0.9rem 2rem',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -426,6 +531,30 @@ function Admin() {
                     <td style={{ padding: '1rem 1.5rem' }}>
                       <div style={{ display: 'flex', gap: '0.8rem' }}>
                         <button
+                          onClick={() => handleEditProduct(product)}
+                          style={{
+                            backgroundColor: 'rgba(201,168,76,0.2)',
+                            border: '1px solid var(--gold-primary)',
+                            color: 'var(--gold-primary)',
+                            borderRadius: '4px',
+                            padding: '0.4rem 0.8rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.4rem',
+                            fontSize: '0.85rem',
+                            transition: 'all 0.2s',
+                          }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.backgroundColor = 'rgba(201,168,76,0.3)'
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.backgroundColor = 'rgba(201,168,76,0.2)'
+                          }}
+                        >
+                          <Pencil size={14} /> Edit
+                        </button>
+                        <button
                           onClick={() => handleDelete(product.id, product.name)}
                           style={{
                             backgroundColor: 'rgba(139,58,58,0.2)',
@@ -438,6 +567,13 @@ function Admin() {
                             alignItems: 'center',
                             gap: '0.4rem',
                             fontSize: '0.85rem',
+                            transition: 'all 0.2s',
+                          }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.backgroundColor = 'rgba(139,58,58,0.3)'
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.backgroundColor = 'rgba(139,58,58,0.2)'
                           }}
                         >
                           <Trash2 size={14} /> Delete

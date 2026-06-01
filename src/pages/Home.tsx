@@ -241,7 +241,7 @@ function Home() {
           color: 'var(--text-primary)',
           marginBottom: '3rem',
         }}>
-          Why Choose Furnish KE
+          Why Choose Young Digital Furiniture
         </h2>
 
         <div style={{
@@ -252,7 +252,7 @@ function Home() {
           margin: '0 auto',
         }}>
           {[
-            { icon: <Truck size={32} />, title: 'Kenya-Wide Delivery', desc: 'We deliver to Nairobi, Mombasa, Kisumu and beyond' },
+            { icon: <Truck size={32} />, title: 'Kenya-Wide Delivery', desc: 'We deliver Kenya Wide' },
             { icon: <Shield size={32} />, title: 'Quality Guaranteed', desc: 'Every piece is inspected before it reaches your door' },
             { icon: <Star size={32} />, title: 'Premium Craftsmanship', desc: 'Handcrafted furniture built to last generations' },
             { icon: <Headphones size={32} />, title: '24/7 Support', desc: 'Our team is always ready to help via WhatsApp or call' },
@@ -282,9 +282,9 @@ function Home() {
         fontSize: '0.85rem',
       }}>
         <p style={{ color: 'var(--gold-primary)', fontFamily: 'Georgia, serif', fontSize: '1.2rem', marginBottom: '0.5rem' }}>
-          FURNISH KE
+          YOUNG DIGITAL FURNITURE AND TIMBER SALES
         </p>
-        <p>© 2026 Furnish KE. All rights reserved. | Nairobi, Kenya</p>
+        <p>© 2026 Young Digital Furniture and Timber Sales. All rights reserved. | Nairobi, Kenya</p>
       </footer>
 
     </div>

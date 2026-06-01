@@ -1,12 +1,11 @@
 import axios from 'axios'
 
-const BASE_URL = 'https://godchild.alwaysdata.net/api'
+const BASE_URL = 'https://furnish-ke-api.onrender.com/api'
 
 const api = axios.create({
   baseURL: BASE_URL,
 })
 
-// Attach token to every request if user is logged in
 api.interceptors.request.use((config) => {
   const user = localStorage.getItem('user')
   if (user) {
@@ -22,11 +21,21 @@ api.interceptors.request.use((config) => {
 export const getProducts = () => api.get('/products')
 export const getProductById = (id: number) => api.get(`/products/${id}`)
 export const addProduct = (data: FormData) => api.post('/products', data)
-export const updateProduct = (id: number, data: FormData) => api.post(`/products/${id}`, data)
-export const deleteProduct = (id: number) => api.delete(`/products/${id}`)
+export const updateProduct = (id: number, data: FormData) => api.put(`/products/${id}`, data)
+export const deleteProduct = (id: number, userId: number) => {
+  const formData = new FormData()
+  formData.append('user_id', String(userId))
+  return api.delete(`/products/${id}`, { data: formData })
+}
 
-// AUTH
-export const signin = (data: FormData) => api.post('/signin', data)
-export const signup = (data: FormData) => api.post('/signup', data)
+// PAYMENTS — NEW
+export const initiateMpesaPayment = (data: {
+  phone: string
+  amount: number
+  accountReference: string
+  description: string
+  items: any[]
+  userId: string | number
+}) => api.post('/payment/mpesa', data)
 
 export default api

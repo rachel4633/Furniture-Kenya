@@ -39,14 +39,9 @@ function Cart() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: 'var(--bg-primary)',
-      padding: '3rem 2rem',
-    }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-primary)', padding: '3rem 2rem' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
-        {/* Header */}
         <Link to="/shop" style={{
           color: 'var(--text-secondary)',
           textDecoration: 'none',
@@ -90,20 +85,18 @@ function Cart() {
                 gap: '1.5rem',
                 alignItems: 'center',
               }}>
-                {/* Image */}
                 <img
                   src={item.image}
                   alt={item.name}
                   style={{
                     width: '100px',
                     height: '100px',
-                    objectFit: 'cover',
+                    objectFit: 'contain',
                     borderRadius: '4px',
                     flexShrink: 0,
+                    backgroundColor: 'var(--bg-tertiary)',
                   }}
                 />
-
-                {/* Info */}
                 <div style={{ flex: 1 }}>
                   <p style={{
                     color: 'var(--gold-primary)',
@@ -127,7 +120,6 @@ function Cart() {
                   </p>
                 </div>
 
-                {/* Quantity Controls */}
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -139,14 +131,7 @@ function Cart() {
                 }}>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'var(--gold-primary)',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
+                    style={{ background: 'none', border: 'none', color: 'var(--gold-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                   >
                     <Minus size={16} />
                   </button>
@@ -155,41 +140,22 @@ function Cart() {
                   </span>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'var(--gold-primary)',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
+                    style={{ background: 'none', border: 'none', color: 'var(--gold-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                   >
                     <Plus size={16} />
                   </button>
                 </div>
 
-                {/* Subtotal */}
                 <div style={{ textAlign: 'right', minWidth: '120px' }}>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.3rem' }}>
-                    Subtotal
-                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.3rem' }}>Subtotal</p>
                   <p style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>
                     KES {(item.price * item.quantity).toLocaleString()}
                   </p>
                 </div>
 
-                {/* Remove */}
                 <button
                   onClick={() => removeFromCart(item.id)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--error)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '0.5rem',
-                  }}
+                  style={{ background: 'none', border: 'none', color: 'var(--error)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.5rem' }}
                 >
                   <Trash2 size={18} />
                 </button>
@@ -224,39 +190,40 @@ function Cart() {
                 <span style={{ color: 'var(--text-secondary)' }}>Delivery</span>
                 <span style={{ color: 'var(--success)' }}>Free</span>
               </div>
-              <div style={{
-                borderTop: '1px solid var(--border)',
-                paddingTop: '1rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}>
-                <span style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '1.1rem' }}>
-                  Total
-                </span>
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '1.1rem' }}>Total</span>
                 <span style={{ color: 'var(--gold-primary)', fontWeight: 'bold', fontSize: '1.2rem' }}>
                   KES {totalPrice.toLocaleString()}
                 </span>
               </div>
             </div>
 
-            <button style={{
-              width: '100%',
-              padding: '1rem',
-              backgroundColor: 'var(--gold-primary)',
-              color: 'var(--bg-primary)',
-              border: 'none',
-              borderRadius: '4px',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              cursor: 'pointer',
-              marginBottom: '1rem',
-            }}>
-              Proceed to Checkout
-            </button>
+            <Link
+              to="/checkout"
+              style={{
+                width: '100%',
+                padding: '1rem',
+                backgroundColor: 'var(--gold-primary)',
+                color: 'var(--bg-primary)',
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                textDecoration: 'none',
+                boxSizing: 'border-box',
+                marginBottom: '1rem',
+              }}
+            >
+              💳 Proceed to Checkout
+            </Link>
 
-            {/* WhatsApp Order */}
             
-              <a href={`https://wa.me/254700000000?text=Hi! I'd like to order ${totalItems} item(s) worth KES ${totalPrice.toLocaleString()} from Furnish KE`}
+             <a href={`https://wa.me/254745530374?text=Hi! I'd like to order ${totalItems} item(s) worth KES ${totalPrice.toLocaleString()} from YOUNG DIGITAL FURNITURE`}
               target="_blank"
               rel="noreferrer"
               style={{
@@ -280,13 +247,8 @@ function Cart() {
               📱 Order via WhatsApp
             </a>
 
-            <p style={{
-              color: 'var(--text-muted)',
-              fontSize: '0.8rem',
-              textAlign: 'center',
-              marginTop: '1rem',
-            }}>
-              Free delivery within Nairobi
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', textAlign: 'center', marginTop: '1rem' }}>
+              Delivery done on customer's request.
             </p>
           </div>
         </div>
