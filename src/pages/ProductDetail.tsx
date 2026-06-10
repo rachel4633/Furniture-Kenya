@@ -234,7 +234,7 @@ function ProductDetail() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                 <Truck size={16} style={{ color: 'var(--gold-primary)' }} />
                 <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                  Free delivery within Nairobi
+                  Delivery on customers wish
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>

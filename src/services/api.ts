@@ -38,4 +38,14 @@ export const initiateMpesaPayment = (data: {
   userId: string | number
 }) => api.post('/payment/mpesa', data)
 
+// Confirm order with transaction code
+export const confirmOrder = (data: {
+  transactionCode: string
+  checkoutRequestId: string
+  phone: string
+  amount: number
+  userId: string | number
+  items: any[]
+}) => api.post('/payment/confirm', data)
+
 export default api

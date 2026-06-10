@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { ShoppingCart, Heart, Eye } from 'lucide-react' // CHANGED: Added 'Eye' icon
-import { useNavigate } from 'react-router-dom'           // CHANGED: NEW - for navigation
+import { ShoppingCart, Heart, Eye } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { getProducts } from '../services/api'
 import type { Product } from '../types'
 import { useCart } from '../context/CartContext'
@@ -16,7 +16,7 @@ function Shop() {
   const [search, setSearch] = useState('')
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist()
   const { addToCart } = useCart()
-  const navigate = useNavigate()  // CHANGED: NEW - added for routing
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchProducts()
@@ -41,25 +41,25 @@ function Shop() {
   })
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', padding: '3rem 2rem' }}>
+    <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', padding: '2rem' }}>
 
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h1 style={{
           fontFamily: 'Georgia, serif',
-          fontSize: '2.5rem',
+          fontSize: '2.3rem',
           color: 'var(--text-primary)',
-          marginBottom: '0.5rem',
+          marginBottom: '0.4rem',
         }}>
           Our Collection
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>
-          Handpicked premium furniture for every room
+          Handpicked premium furniture for Every Place.
         </p>
       </div>
 
       {/* Search */}
-      <div style={{ maxWidth: '500px', margin: '0 auto 2rem' }}>
+      <div style={{ maxWidth: '500px', margin: '0 auto 1.5rem' }}>
         <input
           type="text"
           placeholder="Search furniture..."
@@ -81,24 +81,24 @@ function Shop() {
       {/* Category Filter */}
       <div style={{
         display: 'flex',
-        gap: '1rem',
+        gap: '0.8rem',
         justifyContent: 'center',
         flexWrap: 'wrap',
-        marginBottom: '3rem',
+        marginBottom: '2rem',
       }}>
         {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
             style={{
-              padding: '0.5rem 1.5rem',
+              padding: '0.4rem 1.2rem',
               borderRadius: '4px',
               border: '1px solid var(--gold-primary)',
               backgroundColor: activeCategory === cat ? 'var(--gold-primary)' : 'transparent',
               color: activeCategory === cat ? 'var(--bg-primary)' : 'var(--gold-primary)',
               cursor: 'pointer',
               fontWeight: 'bold',
-              fontSize: '0.9rem',
+              fontSize: '0.85rem',
               transition: 'all 0.2s',
             }}
           >
@@ -110,18 +110,14 @@ function Shop() {
       {/* Loading */}
       {loading && (
         <div style={{ textAlign: 'center', padding: '4rem' }}>
-          <p style={{ color: 'var(--gold-primary)', fontSize: '1.1rem' }}>
-            Loading products...
-          </p>
+          <p style={{ color: 'var(--gold-primary)', fontSize: '1.1rem' }}>Loading products...</p>
         </div>
       )}
 
       {/* Error */}
       {error && (
         <div style={{ textAlign: 'center', padding: '4rem' }}>
-          <p style={{ color: 'var(--error)', fontSize: '1.1rem', marginBottom: '1rem' }}>
-            {error}
-          </p>
+          <p style={{ color: 'var(--error)', fontSize: '1.1rem', marginBottom: '1rem' }}>{error}</p>
           <button
             onClick={fetchProducts}
             style={{
@@ -139,13 +135,13 @@ function Shop() {
         </div>
       )}
 
-      {/* Product Grid */}
+      {/* Product Grid - CHANGED: 4 columns per row */}
       {!loading && !error && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '2rem',
-          maxWidth: '1200px',
+          gridTemplateColumns: 'repeat(4, 1fr)', // CHANGED: fixed 4 columns
+          gap: '1.5rem',
+          maxWidth: '1400px',
           margin: '0 auto',
         }}>
           {filtered.map(product => (
@@ -156,12 +152,10 @@ function Shop() {
                 border: '1px solid var(--border)',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                // CHANGED: Added animation and flex
                 transition: 'border-color 0.3s, transform 0.3s',
                 display: 'flex',
                 flexDirection: 'column',
               }}
-              // CHANGED: NEW - Card lift animation on hover
               onMouseEnter={e => {
                 e.currentTarget.style.borderColor = 'var(--gold-primary)'
                 e.currentTarget.style.transform = 'translateY(-4px)'
@@ -171,16 +165,16 @@ function Shop() {
                 e.currentTarget.style.transform = 'translateY(0)'
               }}
             >
-              {/* ========== CHANGED: NEW IMAGE CONTAINER SECTION ========== */}
-              <div style={{ position: 'relative',
-                  overflow: 'hidden',
-                  backgroundColor: 'var(--bg-tertiary)',
-                  height: '250px',
-                  display:'flex',
-                  alignItems:'center',
-                  justifyContent:'center'
-                  }}>
-                {/* NEW: Display product image */}
+              {/* Image Container */}
+              <div style={{
+                position: 'relative',
+                overflow: 'hidden',
+                backgroundColor: 'var(--bg-tertiary)',
+                height: '220px', // CHANGED: slightly smaller for 4-col layout
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -190,7 +184,6 @@ function Shop() {
                     objectFit: 'contain',
                     transition: 'transform 0.3s',
                   }}
-                  // NEW: Image zoom on hover
                   onMouseEnter={e => {
                     (e.target as HTMLImageElement).style.transform = 'scale(1.05)'
                   }}
@@ -199,7 +192,7 @@ function Shop() {
                   }}
                 />
 
-                {/* Heart Button - moved inside image container */}
+                {/* Heart Button */}
                 <button
                   onClick={() => isWishlisted(product.id)
                     ? removeFromWishlist(product.id)
@@ -207,22 +200,20 @@ function Shop() {
                   }
                   style={{
                     position: 'absolute',
-                    top: '1rem',
-                    right: '1rem',
+                    top: '0.8rem',
+                    right: '0.8rem',
                     backgroundColor: 'rgba(0,0,0,0.6)',
                     border: 'none',
                     borderRadius: '50%',
-                    width: '36px',
-                    height: '36px',
+                    width: '34px',
+                    height: '34px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
                     color: isWishlisted(product.id) ? '#e74c3c' : 'var(--gold-primary)',
-                    // CHANGED: Added transitions
                     transition: 'all 0.2s',
                   }}
-                  // CHANGED: NEW - Heart button animations
                   onMouseEnter={e => {
                     e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.8)'
                     e.currentTarget.style.transform = 'scale(1.1)'
@@ -232,19 +223,15 @@ function Shop() {
                     e.currentTarget.style.transform = 'scale(1)'
                   }}
                 >
-                  <Heart
-                    size={16}
-                    fill={isWishlisted(product.id) ? '#e74c3c' : 'none'}
-                  />
+                  <Heart size={15} fill={isWishlisted(product.id) ? '#e74c3c' : 'none'} />
                 </button>
               </div>
-              {/* ========== END IMAGE CONTAINER ========== */}
 
-              {/* Info Section */}
-              <div style={{ padding: '1.2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+              {/* Info */}
+              <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <p style={{
                   color: 'var(--gold-primary)',
-                  fontSize: '0.75rem',
+                  fontSize: '0.7rem',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
                   marginBottom: '0.3rem',
@@ -254,15 +241,15 @@ function Shop() {
                 <h3 style={{
                   color: 'var(--text-primary)',
                   fontFamily: 'Georgia, serif',
-                  fontSize: '1.1rem',
-                  marginBottom: '0.5rem',
+                  fontSize: '1rem',
+                  marginBottom: '0.4rem',
                   lineHeight: 1.3,
                 }}>
                   {product.name}
                 </h3>
 
                 {/* Stars */}
-                <div style={{ marginBottom: '1rem', color: 'var(--gold-primary)', fontSize: '0.9rem' }}>
+                <div style={{ marginBottom: '0.8rem', color: 'var(--gold-primary)', fontSize: '0.85rem' }}>
                   {'★'.repeat(product.rating ?? 4)}{'☆'.repeat(5 - (product.rating ?? 4))}
                 </div>
 
@@ -270,16 +257,15 @@ function Shop() {
                 <p style={{
                   color: 'var(--gold-primary)',
                   fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                  marginBottom: '1rem',
+                  fontSize: '1rem',
+                  marginBottom: '0.8rem',
                   marginTop: 'auto',
                 }}>
                   KES {Number(product.price).toLocaleString()}
                 </p>
 
-                {/* ========== CHANGED: TWO BUTTONS INSTEAD OF ONE ========== */}
-                <div style={{ display: 'flex', gap: '0.8rem' }}>
-                  {/* NEW: View Button - links to ProductDetail page */}
+                {/* Buttons */}
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button
                     onClick={() => navigate(`/product/${product.id}`)}
                     style={{
@@ -287,18 +273,17 @@ function Shop() {
                       backgroundColor: 'transparent',
                       color: 'var(--gold-primary)',
                       border: '1px solid var(--gold-primary)',
-                      padding: '0.6rem 0.8rem',
+                      padding: '0.5rem 0.4rem',
                       borderRadius: '4px',
                       fontWeight: 'bold',
-                      fontSize: '0.8rem',
+                      fontSize: '0.75rem',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.4rem',
+                      gap: '0.3rem',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
                     }}
-                    // NEW: View button hover effect
                     onMouseEnter={e => {
                       e.currentTarget.style.backgroundColor = 'var(--gold-primary)'
                       e.currentTarget.style.color = 'var(--bg-primary)'
@@ -308,10 +293,9 @@ function Shop() {
                       e.currentTarget.style.color = 'var(--gold-primary)'
                     }}
                   >
-                    <Eye size={14} /> View
+                    <Eye size={13} /> View
                   </button>
 
-                  {/* CHANGED: Add to Cart button - now separate */}
                   <button
                     onClick={() => addToCart({
                       id: product.id,
@@ -324,30 +308,24 @@ function Shop() {
                       flex: 1,
                       backgroundColor: 'var(--gold-primary)',
                       color: 'var(--bg-primary)',
-                      padding: '0.6rem 0.8rem',
+                      padding: '0.5rem 0.4rem',
                       borderRadius: '4px',
                       border: 'none',
                       fontWeight: 'bold',
-                      fontSize: '0.8rem',
+                      fontSize: '0.75rem',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.4rem',
+                      gap: '0.3rem',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
                     }}
-                    // CHANGED: NEW - Add button hover animation
-                    onMouseEnter={e => {
-                      e.currentTarget.style.transform = 'translateY(-2px)'
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.transform = 'translateY(0)'
-                    }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                   >
-                    <ShoppingCart size={14} /> Add
+                    <ShoppingCart size={13} /> Add
                   </button>
                 </div>
-                {/* ========== END BUTTON CHANGES ========== */}
               </div>
             </div>
           ))}

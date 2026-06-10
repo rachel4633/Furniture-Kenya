@@ -65,6 +65,7 @@ function Navbar() {
           <Phone size={16} /> Contact
         </Link>
       </div>
+      
 
       {/* Cart + Login */}
       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>

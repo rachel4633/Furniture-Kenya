@@ -89,7 +89,7 @@ const Login = () => {
             fontSize: '1.8rem',
             marginBottom: '0.5rem',
           }}>
-            FURNISH KE
+            YOUNG DIGITAL FURNITURE
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             Welcome back. Sign in to continue.

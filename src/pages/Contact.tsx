@@ -112,10 +112,10 @@ function Contact() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2.5rem' }}>
               {[
-                { icon: <Phone size={20} />, label: 'Phone', value: '+254 700 000 000' },
-                { icon: <Mail size={20} />, label: 'Email', value: 'hello@furnishke.co.ke' },
-                { icon: <MapPin size={20} />, label: 'Location', value: 'Westlands, Nairobi, Kenya' },
-                { icon: <Clock size={20} />, label: 'Hours', value: 'Mon - Sat: 8am - 6pm' },
+                { icon: <Phone size={20} />, label: 'Phone', value: '+254 729627644' },
+                { icon: <Mail size={20} />, label: 'Email', value: 'partomwirigi244@gmail.com' },
+                { icon: <MapPin size={20} />, label: 'Location', value: 'Ngong road, Nairobi, Kenya' },
+                { icon: <Clock size={20} />, label: 'Hours', value: 'Every day' },
               ].map(info => (
                 <div key={info.label} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                   <div style={{
@@ -139,7 +139,7 @@ function Contact() {
 
             {/* WhatsApp Button */}
             
-              <a href="https://wa.me/254700000000?text=Hi! I have a question about YOUNG DIGITAL FURNITURE"
+              <a href="https://wa.me/254729627644?text=Hi! I have a question about YOUNG DIGITAL FURNITURE"
               target="_blank"
               rel="noreferrer"
               style={{
