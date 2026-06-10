@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const BASE_URL = 'https://furnish-ke-api.onrender.com/api'
+// Swap the hardcoded string out for Vite's environment variable with a fallback
+const BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api` 
+  : 'https://furnish-ke-api.onrender.com/api'
 
 const api = axios.create({
   baseURL: BASE_URL,

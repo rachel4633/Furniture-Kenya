@@ -16,11 +16,22 @@ function Shop() {
   const [search, setSearch] = useState('')
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist()
   const { addToCart } = useCart()
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   const navigate = useNavigate()
 
   useEffect(() => {
     fetchProducts()
+    const handleResize = () => setScreenWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  const getGridColumns = () => {
+    if (screenWidth >= 1024) return 'repeat(4, 1fr)'
+    if (screenWidth >= 600) return 'repeat(2, 1fr)'
+    return '1fr'
+  }
+ 
 
   const fetchProducts = async () => {
     try {
@@ -135,11 +146,11 @@ function Shop() {
         </div>
       )}
 
-      {/* Product Grid - CHANGED: 4 columns per row */}
+      {/* Product Grid - UPDATED: Hooked to dynamic resize logic */}
       {!loading && !error && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)', // CHANGED: fixed 4 columns
+          gridTemplateColumns: getGridColumns(),
           gap: '1.5rem',
           maxWidth: '1400px',
           margin: '0 auto',
@@ -170,7 +181,7 @@ function Shop() {
                 position: 'relative',
                 overflow: 'hidden',
                 backgroundColor: 'var(--bg-tertiary)',
-                height: '220px', // CHANGED: slightly smaller for 4-col layout
+                height: '220px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
