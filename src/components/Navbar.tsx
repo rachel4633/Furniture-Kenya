@@ -101,13 +101,45 @@ function Navbar() {
         </div>
       )}
 
-      {/* Mobile Hamburger Icon Button */}
+      {/* Mobile Hamburger Icon Button (with Floating Badge Indicator) */}
       {isMobile && (
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
+          style={{ 
+            background: 'transparent', 
+            border: 'none', 
+            color: 'var(--text-primary)', 
+            cursor: 'pointer', 
+            display: 'flex', 
+            alignItems: 'center', 
+            padding: '0.4rem',
+            position: 'relative'
+          }}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          
+          {/* Action indicator over closed menu icon */}
+          {totalItems > 0 && (
+            <span style={{
+              position: 'absolute',
+              top: '0px',
+              right: '0px',
+              backgroundColor: 'var(--gold-primary)',
+              color: 'var(--bg-primary)',
+              fontSize: '0.65rem',
+              fontWeight: 'bold',
+              borderRadius: '50%',
+              width: '16px',
+              height: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
+              pointerEvents: 'none'
+            }}>
+              {totalItems}
+            </span>
+          )}
         </button>
       )}
 
@@ -155,11 +187,70 @@ function Navbar() {
 
             <hr style={{ border: 0, borderTop: '1px solid var(--border)', margin: '0.5rem 0' }} />
 
-            <Link to="/cart" onClick={() => setIsMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.6rem', position: 'relative' }}>
-              <ShoppingCart size={18} /> My Cart ({totalItems})
+            {/* Cart Row inside open Sidebar */}
+            <Link 
+              to="/cart" 
+              onClick={() => setIsMenuOpen(false)} 
+              style={{ 
+                color: 'var(--text-primary)', 
+                textDecoration: 'none', 
+                fontSize: '1.1rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                backgroundColor: 'var(--bg-tertiary)',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '6px',
+                border: '1px solid var(--border)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <ShoppingCart size={18} />
+                <span>My Cart</span>
+              </div>
+              <span style={{
+                backgroundColor: totalItems > 0 ? 'var(--gold-primary)' : 'var(--border)',
+                color: 'var(--bg-primary)',
+                fontWeight: 'bold',
+                fontSize: '0.8rem',
+                padding: '0.15rem 0.6rem',
+                borderRadius: '12px'
+              }}>
+                {totalItems}
+              </span>
             </Link>
-            <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <Heart size={18} /> My Wishlist ({totalWishlist})
+
+            {/* Wishlist Row inside open Sidebar */}
+            <Link 
+              to="/wishlist" 
+              onClick={() => setIsMenuOpen(false)} 
+              style={{ 
+                color: 'var(--text-primary)', 
+                textDecoration: 'none', 
+                fontSize: '1.1rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                backgroundColor: 'var(--bg-tertiary)',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '6px',
+                border: '1px solid var(--border)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <Heart size={18} />
+                <span>My Wishlist</span>
+              </div>
+              <span style={{
+                backgroundColor: totalWishlist > 0 ? '#e74c3c' : 'var(--border)',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '0.8rem',
+                padding: '0.15rem 0.6rem',
+                borderRadius: '12px'
+              }}>
+                {totalWishlist}
+              </span>
             </Link>
 
             <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
