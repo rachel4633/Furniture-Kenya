@@ -63,8 +63,8 @@ function ProductDetail() {
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', padding: '3rem 2rem' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', padding: '2rem 1rem' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
 
         {/* Back Button */}
         <Link to="/shop" style={{
@@ -79,31 +79,39 @@ function ProductDetail() {
           <ArrowLeft size={16} /> Back to Shop
         </Link>
 
-        {/* Main Content */}
+        {/* Clean Stacked Layout: Image Top, Content Bottom */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '4rem',
-          alignItems: 'start',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2.5rem',
         }}>
 
-          {/* Image */}
-          <div>
+          {/* Premium High-Clarity Image Box */}
+          <div style={{
+            backgroundColor: 'var(--bg-secondary)',
+            border: '1px solid var(--border)',
+            borderRadius: '12px',
+            padding: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            maxHeight: '600px',
+            overflow: 'hidden'
+          }}>
             <img
               src={product.image}
               alt={product.name}
               style={{
                 width: '100%',
+                maxHeight: '550px',
                 borderRadius: '8px',
-                objectFit: 'cover',
-                height: '500px',
-                border: '1px solid var(--border)',
+                objectFit: 'contain', // Keeps the exact details perfectly crisp and uncropped
               }}
             />
           </div>
 
-          {/* Details */}
-          <div>
+          {/* Details & Description Section Below */}
+          <div style={{ padding: '0 0.5rem' }}>
             <p style={{
               color: 'var(--gold-primary)',
               fontSize: '0.8rem',
@@ -124,15 +132,15 @@ function ProductDetail() {
               {product.name}
             </h1>
 
-            {/* Stars */}
+            {/* Stars Rating */}
             <div style={{ marginBottom: '1rem', color: 'var(--gold-primary)', fontSize: '1.2rem' }}>
               {'★'.repeat(product.rating ?? 4)}{'☆'.repeat(5 - (product.rating ?? 4))}
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginLeft: '0.5rem' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginLeft: '0.5rem' }}>
                 ({product.rating ?? 4}.0)
               </span>
             </div>
 
-            {/* Price */}
+            {/* Price Badge */}
             <p style={{
               color: 'var(--gold-primary)',
               fontSize: '2rem',
@@ -142,19 +150,24 @@ function ProductDetail() {
               KES {Number(product.price).toLocaleString()}
             </p>
 
-            {/* Description */}
+            {/* Description Block */}
             {product.description && (
-              <p style={{
-                color: 'var(--text-secondary)',
-                lineHeight: 1.8,
-                marginBottom: '2rem',
-                fontSize: '0.95rem',
-              }}>
-                {product.description}
-              </p>
+              <div style={{ marginBottom: '2rem' }}>
+                <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '0.5rem', fontFamily: 'Georgia, serif' }}>
+                  Description
+                </h3>
+                <p style={{
+                  color: 'var(--text-secondary)',
+                  lineHeight: 1.8,
+                  fontSize: '0.95rem',
+                  margin: 0
+                }}>
+                  {product.description}
+                </p>
+              </div>
             )}
 
-            {/* Specs */}
+            {/* Specifications Card */}
             <div style={{
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border)',
@@ -164,24 +177,24 @@ function ProductDetail() {
             }}>
               {product.dimensions && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Dimensions</span>
-                  <span style={{ color: 'var(--text-primary)' }}>{product.dimensions}</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Dimensions</span>
+                  <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>{product.dimensions}</span>
                 </div>
               )}
               {product.material && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Material</span>
-                  <span style={{ color: 'var(--text-primary)' }}>{product.material}</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Material</span>
+                  <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>{product.material}</span>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Availability</span>
-                <span style={{ color: 'var(--success)' }}>✓ In Stock</span>
+                <span style={{ color: 'var(--text-secondary)' }}>Availability</span>
+                <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>✓ In Stock</span>
               </div>
             </div>
 
-            {/* Buttons */}
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2.5rem' }}>
               <button
                 onClick={() => addToCart({
                   id: product.id,
@@ -208,6 +221,7 @@ function ProductDetail() {
               >
                 <ShoppingCart size={18} /> Add to Cart
               </button>
+              
               <button
                 onClick={() => isWishlisted(product.id)
                   ? removeFromWishlist(product.id)
@@ -220,6 +234,9 @@ function ProductDetail() {
                   backgroundColor: 'transparent',
                   color: isWishlisted(product.id) ? '#e74c3c' : 'var(--gold-primary)',
                   cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Heart
@@ -229,12 +246,18 @@ function ProductDetail() {
               </button>
             </div>
 
-            {/* Delivery Info */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+            {/* Logistics & Trust Factors */}
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '0.8rem',
+              borderTop: '1px solid var(--border)',
+              paddingTop: '1.5rem'
+            }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                 <Truck size={16} style={{ color: 'var(--gold-primary)' }} />
                 <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                  Delivery on customers wish
+                  Delivery on customer's wish
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
@@ -245,6 +268,7 @@ function ProductDetail() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
