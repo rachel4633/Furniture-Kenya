@@ -2,8 +2,10 @@ import axios from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserPlus, Mail, Lock, User, Phone } from 'lucide-react'
+import { useAuth } from '../context/AuthContext' // 1. Imported your Auth context
 
 const Register = () => {
+  const { login } = useAuth() // 2. Grabbed the login function
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -29,14 +31,24 @@ const Register = () => {
 
       const response = await axios.post('https://furnish-ke-api.onrender.com/api/signup', formdata)
       setLoading('')
-      setSuccess(response.data.message || 'Account created successfully! 🎉')
 
-      setUsername('')
-      setEmail('')
-      setPassword('')
-      setPhone('')
+      // 3. Automatically log the user in if the API returns the user object
+      if (response.data.user) {
+        login(response.data.user)
+        setSuccess('Account created successfully! Logging you in... 🎉')
+        
+        setUsername('')
+        setEmail('')
+        setPassword('')
+        setPhone('')
 
-      setTimeout(() => navigate('/login'), 3000)
+        // Redirect straight to home, skipping /login completely
+        setTimeout(() => navigate('/'), 2000)
+      } else {
+        // Fallback case just in case the API payload structure is unexpected
+        setSuccess(response.data.message || 'Account created successfully! 🎉')
+        setTimeout(() => navigate('/login'), 2000)
+      }
     } catch (err: any) {
       setLoading('')
       setError(err.message || 'Something went wrong. Please try again.')
