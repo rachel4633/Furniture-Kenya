@@ -14,7 +14,6 @@ function Checkout() {
   const { user }  = useAuth()
   const { cartItems, totalPrice, totalItems, clearCart } = useCart()
 
-  // Retrieve direct single-product state if navigating directly from ProductDetail
   const directProduct = routerLocation.state?.directProduct || null
 
   const [name, setName]         = useState(user?.username || '')
@@ -25,7 +24,6 @@ function Checkout() {
   const [orderSuccess, setOrderSuccess]   = useState(false)
   const [orderPlatform, setOrderPlatform] = useState('')
 
-  // Determine pricing metrics based on route entry origin
   const checkoutItems = directProduct ? [{ ...directProduct, quantity: 1 }] : cartItems
   const checkoutTotal = directProduct ? Number(directProduct.price) : totalPrice
   const checkoutCount = directProduct ? 1 : totalItems
@@ -203,6 +201,34 @@ function Checkout() {
     )
   }
 
+  // Common styles for individual icon alignment
+  const wrapperStyle = {
+    position: 'relative' as const,
+    display: 'flex',
+    alignItems: 'center'
+  }
+
+  const symbolIconStyle = {
+    position: 'absolute' as const,
+    left: '1rem',
+    color: 'var(--gold-primary)',
+    zIndex: 2,
+    pointerEvents: 'none' as const
+  }
+
+  const inputFieldStyle = {
+    width: '100%',
+    padding: '0.9rem 1rem 0.9rem 2.8rem',
+    backgroundColor: 'var(--bg-tertiary)',
+    border: '1px solid var(--border)',
+    borderRadius: '4px',
+    color: 'var(--text-primary)',
+    outline: 'none',
+    boxSizing: 'border-box' as const,
+    position: 'relative' as const,
+    zIndex: 1
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -212,7 +238,6 @@ function Checkout() {
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         
-        {/* Back navigation */}
         <button
           onClick={() => navigate(-1)}
           style={{
@@ -279,36 +304,36 @@ function Checkout() {
             </h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div style={{ position: 'relative' }}>
-                <User size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <div style={wrapperStyle}>
+                <User size={16} style={symbolIconStyle} />
                 <input
                   type="text"
                   placeholder="Full Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  style={{ width: '100%', padding: '0.9rem 1rem 0.9rem 2.8rem', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text-primary)', outline: 'none', boxSizing: 'border-box' }}
+                  style={inputFieldStyle}
                 />
               </div>
 
-              <div style={{ position: 'relative' }}>
-                <Phone size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <div style={wrapperStyle}>
+                <Phone size={16} style={symbolIconStyle} />
                 <input
                   type="text"
                   placeholder="M-Pesa / Contact Mobile Number"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  style={{ width: '100%', padding: '0.9rem 1rem 0.9rem 2.8rem', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text-primary)', outline: 'none', boxSizing: 'border-box' }}
+                  style={inputFieldStyle}
                 />
               </div>
 
-              <div style={{ position: 'relative' }}>
-                <MapPin size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <div style={wrapperStyle}>
+                <MapPin size={16} style={symbolIconStyle} />
                 <input
                   type="text"
                   placeholder="Delivery Address / Estate / City"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  style={{ width: '100%', padding: '0.9rem 1rem 0.9rem 2.8rem', backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text-primary)', outline: 'none', boxSizing: 'border-box' }}
+                  style={inputFieldStyle}
                 />
               </div>
             </div>
