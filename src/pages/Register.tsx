@@ -1,14 +1,15 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { UserPlus, Mail, Lock, User, Phone } from 'lucide-react'
-import { useAuth } from '../context/AuthContext' // 1. Imported your Auth context
+import { UserPlus, Mail, Lock, User, Phone, Eye, EyeOff } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const Register = () => {
-  const { login } = useAuth() // 2. Grabbed the login function
+  const { login } = useAuth()
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false) // Added state to track visibility
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState('')
   const [success, setSuccess] = useState('')
@@ -32,7 +33,7 @@ const Register = () => {
       const response = await axios.post('https://furnish-ke-api.onrender.com/api/signup', formdata)
       setLoading('')
 
-      // 3. Automatically log the user in if the API returns the user object
+      // Automatically log the user in if the API returns the user object
       if (response.data.user) {
         login(response.data.user)
         setSuccess('Account created successfully! Logging you in... 🎉')
@@ -45,13 +46,13 @@ const Register = () => {
         // Redirect straight to home, skipping /login completely
         setTimeout(() => navigate('/'), 2000)
       } else {
-        // Fallback case just in case the API payload structure is unexpected
-        setSuccess(response.data.message || 'Account created successfully! 🎉')
-        setTimeout(() => navigate('/login'), 2000)
+        // Fallback case: if backend doesn't pass the full user object, send them to home anyway
+        setSuccess('Account created successfully! Welcome! 🎉')
+        setTimeout(() => navigate('/'), 2000)
       }
     } catch (err: any) {
       setLoading('')
-      setError(err.message || 'Something went wrong. Please try again.')
+      setError(err?.response?.data?.message || err.message || 'Something went wrong. Please try again.')
     }
   }
 
@@ -101,7 +102,7 @@ const Register = () => {
             fontSize: '1.8rem',
             marginBottom: '0.5rem',
           }}>
-         YOUNG DIGITAL FURNITURE
+            YOUNG DIGITAL FURNITURE
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             Create your account to get started.
@@ -153,7 +154,7 @@ const Register = () => {
         )}
 
         {/* Form */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
           {/* Username */}
           <div style={{ position: 'relative' }}>
@@ -181,17 +182,33 @@ const Register = () => {
             />
           </div>
 
-          {/* Password */}
+          {/* Password with Eye Toggle Icon */}
           <div style={{ position: 'relative' }}>
             <Lock size={16} style={iconStyle} />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               required
               value={password}
               onChange={e => setPassword(e.target.value)}
-              style={inputStyle}
+              style={{ ...inputStyle, paddingRight: '3rem' }}
             />
+            <button
+              onClick={() => setShowPassword(!showPassword)}
+              type="button"
+              style={{
+                position: 'absolute',
+                right: '1rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+              }}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
 
           {/* Phone */}
@@ -209,7 +226,7 @@ const Register = () => {
 
           {/* Submit */}
           <button
-            onClick={handleSubmit}
+            type="submit"
             style={{
               width: '100%',
               padding: '1rem',
@@ -229,7 +246,7 @@ const Register = () => {
           >
             <UserPlus size={18} /> Create Account
           </button>
-        </div>
+        </form>
 
         {/* Footer */}
         <p style={{
