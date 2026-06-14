@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, Eye } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 
 function Cart() {
@@ -242,17 +242,17 @@ function Cart() {
                 marginBottom: '0.8rem',
               }}
             >
-              \ud83d\udcb3 Proceed to Checkout
+              💳 Proceed to Checkout
             </Link>
 
-            <a href={`https://wa.me/254745530374?text=Hi! I'd like to order ${totalItems} item(s) worth KES ${totalPrice.toLocaleString()} from YOUNG DIGITAL FURNITURE`}
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              to="/shop"
               style={{
                 width: '100%',
                 padding: '0.8rem',
-                backgroundColor: '#25D366',
-                color: '#fff',
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--gold-primary)',
+                border: '1px solid var(--gold-primary)',
                 borderRadius: '4px',
                 fontWeight: 'bold',
                 fontSize: '0.95rem',
@@ -264,8 +264,8 @@ function Cart() {
                 boxSizing: 'border-box',
               }}
             >
-              \ud83d\udcf1 Order via WhatsApp
-            </a>
+              <Eye size={18} /> View Product
+            </Link>
 
             <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem', marginBottom: 0 }}>
               Delivery done on customer's request.
