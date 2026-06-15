@@ -167,17 +167,12 @@ function Shop() {
                 justifyContent: 'center',
               }}>
                 <img
-                  src={product.image}
-                  alt={product.name}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover', 
-                    transition: 'transform 0.3s',
-                  }}
-                  onMouseEnter={e => { if (!isMobile) (e.target as HTMLImageElement).style.transform = 'scale(1.04)' }}
-                  onMouseLeave={e => { if (!isMobile) (e.target as HTMLImageElement).style.transform = 'scale(1)' }}
-                />
+                        src={product.image}
+                        alt={product.name}
+                        width={400}
+                        height={400}
+                        loading="lazy"
+                    />
 
                 {/* Heart Badge Overlay */}
                 <button

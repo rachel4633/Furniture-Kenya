@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
+// ✅ CHANGED: Load API URL from .env file
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 const Login = () => {
   const { login } = useAuth()
   const [email, setEmail] = useState('')
@@ -46,7 +49,8 @@ const Login = () => {
       data.append('email', email)
       data.append('password', password)
 
-      const response = await axios.post('https://furnish-ke-api.onrender.com/api/signin', data)
+      // ✅ CHANGED: Use API_BASE_URL variable from .env
+      const response = await axios.post(`${API_BASE_URL}/api/signin`, data)
 
       setLoading('')
 

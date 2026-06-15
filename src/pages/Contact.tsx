@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 
-// 🔑 PASTE YOUR KEYS HERE
-const SERVICE_ID = 'service_hq0f1an'
-const TEMPLATE_ID = 'template_3rml2gs'
-const PUBLIC_KEY = 'HTjlUXU3b_XrrXJA4'
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
 function Contact() {
   const [name, setName] = useState('')
@@ -14,6 +13,21 @@ function Contact() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+  
+  // Dynamic screen width monitoring for true mobile responsiveness
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    // Set initial state
+    handleResize()
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
@@ -61,9 +75,9 @@ function Contact() {
   return (
     <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh' }}>
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section style={{
-        padding: '5rem 2rem',
+        padding: isMobile ? '4rem 1rem' : '5rem 2rem',
         textAlign: 'center',
         background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1208 50%, #0a0a0a 100%)',
         borderBottom: '1px solid var(--border)',
@@ -90,16 +104,18 @@ function Contact() {
         </p>
       </section>
 
-      <section style={{ padding: '5rem 2rem' }}>
+      {/* Main Form and Info Layout */}
+      <section style={{ padding: isMobile ? '2.5rem 1rem' : '5rem 2rem' }}>
         <div style={{
           maxWidth: '1000px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '4rem',
+          // Dynamic grid adjustment based on window size
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '3rem' : '4rem',
         }}>
 
-          {/* Contact Info */}
+          {/* Contact Info Column */}
           <div>
             <h2 style={{
               fontFamily: 'Georgia, serif',
@@ -131,20 +147,20 @@ function Contact() {
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.2rem' }}>
                       {info.label}
                     </p>
-                    <p style={{ color: 'var(--text-primary)' }}>{info.value}</p>
+                    <p style={{ color: 'var(--text-primary)', wordBreak: 'break-word' }}>{info.value}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* WhatsApp Button */}
-            
-              <a href="https://wa.me/254729627644?text=Hi! I have a question about YOUNG DIGITAL FURNITURE"
+            <a href="https://wa.me/254729627644?text=Hi! I have a question about YOUNG DIGITAL FURNITURE"
               target="_blank"
               rel="noreferrer"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '0.8rem',
                 backgroundColor: '#25D366',
                 color: '#fff',
@@ -153,6 +169,8 @@ function Contact() {
                 textDecoration: 'none',
                 fontWeight: 'bold',
                 fontSize: '1rem',
+                width: isMobile ? '100%' : 'auto',
+                boxSizing: 'border-box'
               }}
             >
               <MessageCircle size={20} />
@@ -160,12 +178,12 @@ function Contact() {
             </a>
           </div>
 
-          {/* Contact Form */}
+          {/* Contact Form Column */}
           <div style={{
             backgroundColor: 'var(--bg-secondary)',
             border: '1px solid var(--border)',
             borderRadius: '8px',
-            padding: '2rem',
+            padding: isMobile ? '1.5rem 1.2rem' : '2rem',
           }}>
             <h2 style={{
               fontFamily: 'Georgia, serif',
@@ -258,6 +276,7 @@ function Contact() {
                   fontSize: '1rem',
                   cursor: loading ? 'not-allowed' : 'pointer',
                   marginTop: '0.5rem',
+                  width: '100%'
                 }}
               >
                 {loading ? 'Sending...' : 'Send Message'}

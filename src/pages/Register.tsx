@@ -4,12 +4,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { UserPlus, Mail, Lock, User, Phone, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
+// ✅ CHANGED: Move API_BASE_URL to top level (outside function)
+// WHY: Better practice, easier to see at a glance
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 const Register = () => {
   const { login } = useAuth()
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false) // Added state to track visibility
+  const [showPassword, setShowPassword] = useState(false)
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState('')
   const [success, setSuccess] = useState('')
@@ -30,7 +34,8 @@ const Register = () => {
       formdata.append('password', password)
       formdata.append('phone', phone)
 
-      const response = await axios.post('https://furnish-ke-api.onrender.com/api/signup', formdata)
+      // ✅ CHANGED: Use API_BASE_URL from top level
+      const response = await axios.post(`${API_BASE_URL}/api/signup`, formdata)
       setLoading('')
 
       // Automatically log the user in if the API returns the user object
@@ -211,11 +216,14 @@ const Register = () => {
             </button>
           </div>
 
-          {/* Phone */}
+          {/* Phone - ✅ CRITICAL CHANGE: type="number" → type="tel" */}
+          {/* WHY: type="number" loses the + sign and leading zeros */}
+          {/* BEFORE: type="number" causes issues with international numbers like +254 */}
+          {/* AFTER: type="tel" keeps the number as text and preserves formatting */}
           <div style={{ position: 'relative' }}>
             <Phone size={16} style={iconStyle} />
             <input
-              type="number"
+              type="tel"
               placeholder="Phone number"
               required
               value={phone}
